@@ -115,6 +115,7 @@ if confirm == "yes":
         DeleteAutoScalingConfigurations(config, processCompartments)
 
         print ("\n--[ Deleting Compute Instances ]--")
+        DeleteClusterNetworks(config,processCompartments)
         DeleteInstancePools(config,processCompartments)
         DeleteInstanceConfigs(config, processCompartments)
         DeleteInstances(config,processCompartments)
