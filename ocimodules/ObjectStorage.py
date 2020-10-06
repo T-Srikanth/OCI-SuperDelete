@@ -15,7 +15,11 @@ def DeleteBuckets(config, Compartments):
 
     for buckets in AllBuckets:
         for bucket in buckets:
-            DeleteObjects(config,bucket)
+            versioning=object.get_bucket(namespace_name=ns, bucket_name=bucket.name).data.versioning
+            if versioning != "Disabled":
+                DeleteVersionedObjects(config,bucket)
+            else:
+                DeleteObjects(config,bucket)
 
     for buckets in AllBuckets:
         for bucket in buckets:
@@ -42,7 +46,17 @@ def DeleteObjects(config, bucket):
         else:
             more = False
 
+    more=True
 
+    while more:
+        items=object.list_multipart_uploads(namespace_name=bucket.namespace, bucket_name=bucket.name).data
+        for item in items:
+            object.abort_multipart_upload(namespace_name=bucket.namespace, bucket_name=item.bucket, object_name=item.object, upload_id=item.upload_id)
+
+        if len(items) == objectlimit:
+            more = True
+        else:
+            more = False
 
     more = True
 
@@ -58,7 +72,6 @@ def DeleteObjects(config, bucket):
             more = True
         else:
             more = False
-
 
 def DeleteVersionedObjects(config, bucket):
     objectlimit = 20
@@ -78,7 +91,17 @@ def DeleteVersionedObjects(config, bucket):
         else:
             more = False
 
+    more=True
 
+    while more:
+        items=object.list_multipart_uploads(namespace_name=bucket.namespace, bucket_name=bucket.name).data
+        for item in items:
+            object.abort_multipart_upload(namespace_name=bucket.namespace, bucket_name=item.bucket, object_name=item.object, upload_id=item.upload_id)
+
+        if len(items) == objectlimit:
+            more = True
+        else:
+            more = False
 
     more = True
 
@@ -94,11 +117,4 @@ def DeleteVersionedObjects(config, bucket):
         if len(items) == objectlimit:
             more = True
         else:
-            more = False      
-
-
-
-
-
-
-
+            more = False                  
