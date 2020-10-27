@@ -110,7 +110,7 @@ def DeleteDHCPoptions(config, compartment, vcn):
                             count = count + 1
                         except Exception as e:
                             print("error trying to delete: {}".format(itemstatus.display_name))
-                            print (e)
+#                             print (e)
                     else:
                         print("{} = {}".format(itemstatus.display_name, itemstatus.lifecycle_state))
                         count = count + 1
