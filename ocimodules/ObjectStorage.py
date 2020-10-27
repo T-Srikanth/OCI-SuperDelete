@@ -118,3 +118,13 @@ def DeleteVersionedObjects(config, bucket):
             more = True
         else:
             more = False                  
+
+
+
+
+
+
+
+
+
+

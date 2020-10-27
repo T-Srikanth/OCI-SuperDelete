@@ -41,7 +41,6 @@ def DeleteClusterNetworks(config, Compartments):
             itemsPresent = False
     print ("All Objects deleted!")
 
-
 def DeleteInstancePools(config, Compartments):
     AllItems = []
     object = oci.core.ComputeManagementClient(config)
