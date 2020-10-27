@@ -22,6 +22,8 @@ from ocimodules.Nosql import *
 from ocimodules.datacatalog import *
 from ocimodules.DigitalAssistant import *
 from ocimodules.APIGateway import *
+from ocimodules.Deployment import *
+from ocimodules.Streaming import *
 import logging
 
 ########## Configuration ####################
@@ -126,6 +128,7 @@ if confirm == "yes":
 
         print ("\n--[ Deleting DataScience Components ]--")
         DeleteNotebooks(config, processCompartments)
+        DeleteModels(config, processCompartments)
         DeleteProjects(config, processCompartments)
 
         print("\n--[ Deleting Application Functions ]--")
@@ -163,7 +166,11 @@ if confirm == "yes":
         print ("\n--[ Deleting FileSystem and Mount Targets ]--")
         DeleteMountTargets(config, processCompartments)
         DeleteFileStorage(config, processCompartments)
-
+        
+        print ("\n--[ Deleting Streams ]--")
+        DeleteStreams(config, processCompartments)
+        DeleteStreamPools(config, processCompartments)
+        
         print ("\n--[ Deleting VCNs ]--")
         DeleteVCN(config, processCompartments)
 
@@ -173,8 +180,9 @@ if confirm == "yes":
         print ("\n--[ Deleting Notifications ]--")
         DeleteNotifications(config, processCompartments)
 
-        print ("\n--[ Deleting Policies ]--")
-        DeletePolicies(config, processCompartments)
+    print ("\n--[ Deleting Policies ]--")
+    config["region"] = homeregion
+    DeletePolicies(config, processCompartments)
 
     print ("\n--[ Hopefully deleting compartments, if empty ]--")
     config["region"] = homeregion
