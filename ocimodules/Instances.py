@@ -9,11 +9,16 @@ def DeleteClusterNetworks(config, Compartments):
 
     print ("Getting all CLusterNetwork objects")
     for Compartment in Compartments:
-        items = oci.pagination.list_call_get_all_results(object.list_cluster_networks, compartment_id=Compartment.id).data
-        for item in items:
-            if (item.lifecycle_state != "TERMINATED"):
-                AllItems.append(item)
-                print("- {} - {}".format(item.display_name, item.lifecycle_state))
+        try:
+            items = oci.pagination.list_call_get_all_results(object.list_cluster_networks, compartment_id=Compartment.id).data
+            for item in items:
+                if (item.lifecycle_state != "TERMINATED"):
+                    AllItems.append(item)
+                    print("- {} - {}".format(item.display_name, item.lifecycle_state))
+        except Exception as e:
+            if e.status == 404:
+                print("Cluster networks not found in compartment :" +Compartment.id)
+                continue
 
     itemsPresent = True
 
