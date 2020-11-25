@@ -8,47 +8,47 @@ def DeleteDBCS(config, Compartments):
     object = oci.database.DatabaseClient(config)
 
     print ("Getting all Database objects")
-    retry = True
-    while retry:
-        retry = False
-        try:
-            for Compartment in Compartments:
+    for Compartment in Compartments:
+        retry = True
+        while retry:
+            retry = False
+            try:
                 items = oci.pagination.list_call_get_all_results(object.list_db_systems, compartment_id=Compartment.id).data
                 for item in items:
                     if (item.lifecycle_state != "TERMINATED"):
                         AllItems.append(item)
                         print("- {} - {}".format(item.display_name, item.lifecycle_state))
+            except Exception as e:
+                if e.status == 429:
+                    print ("Delaying.. api calls")
+                    time.sleep(10)
+                    retry = True                         
 
-            itemsPresent = True
+    itemsPresent = True
 
-            while itemsPresent:
-                count = 0
-                for item in AllItems:
-                    try:
-                        itemstatus = object.get_db_system(db_system_id=item.id).data
-                        if itemstatus.lifecycle_state != "TERMINATED":
-                            if itemstatus.lifecycle_state != "TERMINATING":
-                                try:
-                                    print ("Deleting: {}".format(itemstatus.display_name))
-                                    object.terminate_db_system(db_system_id=itemstatus.id)
-                                except:
-                                    print ("error trying to delete: {}".format(itemstatus.display_name))
-                            else:
-                                print("{} = {}".format(itemstatus.display_name, itemstatus.lifecycle_state))
-                            count = count + 1
-                    except:
-                        print ("error getting : {}".format(item.display_name))
-                if count > 0 :
-                    print ("Waiting for all Objects to be deleted...")
-                    time.sleep(WaitRefresh)
-                else:
-                    itemsPresent = False
-            print ("All Objects deleted!")
-        except Exception as e:
-            if e.status == 429:
-                print ("Delaying.. api calls")
-                time.sleep(10)
-                retry = True            
+    while itemsPresent:
+        count = 0
+        for item in AllItems:
+            try:
+                itemstatus = object.get_db_system(db_system_id=item.id).data
+                if itemstatus.lifecycle_state != "TERMINATED":
+                    if itemstatus.lifecycle_state != "TERMINATING":
+                        try:
+                            print ("Deleting: {}".format(itemstatus.display_name))
+                            object.terminate_db_system(db_system_id=itemstatus.id)
+                        except:
+                            print ("error trying to delete: {}".format(itemstatus.display_name))
+                    else:
+                        print("{} = {}".format(itemstatus.display_name, itemstatus.lifecycle_state))
+                    count = count + 1
+            except:
+                print ("error getting : {}".format(item.display_name))
+        if count > 0 :
+            print ("Waiting for all Objects to be deleted...")
+            time.sleep(WaitRefresh)
+        else:
+            itemsPresent = False
+    print ("All Objects deleted!")           
 
 def DeleteAutonomousDB(config, Compartments):
     AllItems = []
