@@ -15,8 +15,14 @@ def DeleteBuckets(config, Compartments):
 
     for buckets in AllBuckets:
         for bucket in buckets:
-            versioning=object.get_bucket(namespace_name=ns, bucket_name=bucket.name).data.versioning
-            if versioning != "Disabled":
+            bkt_details=object.get_bucket(namespace_name=ns, bucket_name=bucket.name).data
+            if bkt_details.is_read_only:
+                object.make_bucket_writable(namespace_name=ns, bucket_name=bucket.name)
+            elif bkt_details.replication_enabled:
+                replication_details=object.list_replication_policies(namespace_name=ns, bucket_name=bucket.name).data
+                for detail in replication_details:
+                    object.delete_replication_policy(namespace_name=ns, bucket_name=bucket.name, replication_id=detail.id)
+            if bkt_details.versioning != "Disabled":
                 DeleteVersionedObjects(config,bucket)
             else:
                 DeleteObjects(config,bucket)
@@ -117,14 +123,4 @@ def DeleteVersionedObjects(config, bucket):
         if len(items) == objectlimit:
             more = True
         else:
-            more = False                  
-
-
-
-
-
-
-
-
-
-
+            more = False
