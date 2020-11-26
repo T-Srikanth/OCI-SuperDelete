@@ -7,7 +7,7 @@ def DeleteDBCS(config, Compartments):
     AllItems = []
     object = oci.database.DatabaseClient(config)
 
-    print ("Getting all Database objects")
+    print ("Getting all Database objects, might take a little longer based on number of DB systems present")
     for Compartment in Compartments:
         retry = True
         while retry:
@@ -29,23 +29,32 @@ def DeleteDBCS(config, Compartments):
     while itemsPresent:
         count = 0
         for item in AllItems:
-            try:
-                itemstatus = object.get_db_system(db_system_id=item.id).data
-                if itemstatus.lifecycle_state != "TERMINATED":
-                    if itemstatus.lifecycle_state != "TERMINATING":
-                        try:
-                            print ("Deleting: {}".format(itemstatus.display_name))
-                            object.terminate_db_system(db_system_id=itemstatus.id)
-                        except:
-                            print ("error trying to delete: {}".format(itemstatus.display_name))
+            retry = True
+            while retry:
+                retry = False
+                try:
+                    itemstatus = object.get_db_system(db_system_id=item.id).data
+                    if itemstatus.lifecycle_state != "TERMINATED":
+                        if itemstatus.lifecycle_state != "TERMINATING":
+                            try:
+                                print ("Deleting: {}".format(itemstatus.display_name))
+                                object.terminate_db_system(db_system_id=itemstatus.id)
+                            except:
+                                print ("error trying to delete: {}".format(itemstatus.display_name))
+                        else:
+                            print("{} = {}".format(itemstatus.display_name, itemstatus.lifecycle_state))
+                        count = count + 1
+                except Exception as e:
+                    if e.status == 429:
+                        print ("Delaying.. api calls")
+                        time.sleep(10)
+                        retry = True                
                     else:
-                        print("{} = {}".format(itemstatus.display_name, itemstatus.lifecycle_state))
-                    count = count + 1
-            except:
-                print ("error getting : {}".format(item.display_name))
+                        print ("error getting : {}".format(item.display_name))
+                        retry = False
         if count > 0 :
             print ("Waiting for all Objects to be deleted...")
-            time.sleep(WaitRefresh)
+            time.sleep(40)
         else:
             itemsPresent = False
     print ("All Objects deleted!")           
