@@ -59,7 +59,7 @@ def DeleteSubnets(config, compartment, vcn):
         print("- {} - {}".format(item.display_name, item.lifecycle_state))
 
     itemsPresent = True
-
+    bailout = 10
     while itemsPresent:
         count = 0
         for item in AllItems:
@@ -80,6 +80,10 @@ def DeleteSubnets(config, compartment, vcn):
         if count > 0:
             print("Waiting for all Objects to be deleted...")
             time.sleep(WaitRefresh)
+            bailout -= 1
+            if bailout == 0:
+                print("Couldn't delete few subnets")
+                itemsPresent = False
         else:
             itemsPresent = False
     print("All Objects deleted!")
@@ -110,7 +114,7 @@ def DeleteDHCPoptions(config, compartment, vcn):
                             count = count + 1
                         except Exception as e:
                             print("error trying to delete: {}".format(itemstatus.display_name))
-#                             print (e)
+                            # print (e)
                     else:
                         print("{} = {}".format(itemstatus.display_name, itemstatus.lifecycle_state))
                         count = count + 1
