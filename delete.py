@@ -122,6 +122,7 @@ if confirm == "yes":
         DeleteInstanceConfigs(config, processCompartments)
         DeleteInstances(config,processCompartments)
         DeleteImages(config, processCompartments)
+        DeleteVolumeGroups(config, processCompartments)
         DeleteBootVolumes(config, processCompartments)
         DeleteBootVolumesBackups(config, processCompartments)
         DeleteDedicatedVMHosts(config, processCompartments)
