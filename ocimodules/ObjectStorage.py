@@ -15,7 +15,12 @@ def DeleteBuckets(config, Compartments):
 
     for buckets in AllBuckets:
         for bucket in buckets:
-            bkt_details=object.get_bucket(namespace_name=ns, bucket_name=bucket.name).data
+            try:
+                bkt_details=object.get_bucket(namespace_name=ns, bucket_name=bucket.name).data
+            except Exception as e:
+                if e.status == 409:
+                    print(e.message +" for bucket : "+ bucket.name)
+                    continue
             if bkt_details.is_read_only:
                 object.make_bucket_writable(namespace_name=ns, bucket_name=bucket.name)
             elif bkt_details.replication_enabled:
