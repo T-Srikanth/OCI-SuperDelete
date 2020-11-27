@@ -123,6 +123,7 @@ if confirm == "yes":
         DeleteInstances(config,processCompartments)
         DeleteImages(config, processCompartments)
         DeleteVolumeGroups(config, processCompartments)
+        DeleteVolumeGroupBackups(config, processCompartments)
         DeleteBootVolumes(config, processCompartments)
         DeleteBootVolumesBackups(config, processCompartments)
         DeleteDedicatedVMHosts(config, processCompartments)
@@ -159,8 +160,6 @@ if confirm == "yes":
         DeleteStacks(config, processCompartments)
 
         print ("\n--[ Deleting Block Volumes ]--")
-        DeleteVolumeGroups(config, processCompartments)
-        DeleteVolumeGroupBackups(config, processCompartments)
         DeleteVolumes(config, processCompartments)
         DeleteBlockVolumesBackups(config, processCompartments)
 
