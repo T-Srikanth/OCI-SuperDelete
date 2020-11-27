@@ -146,6 +146,8 @@ if confirm == "yes":
         DeleteDBCS(config,processCompartments)
         DeleteAutonomousDB(config,processCompartments)
         DeleteDBBackups(config, processCompartments)
+        DeleteAutonomousContainerDatabase(config, processCompartments)
+        DeleteAutonomousExadataInfrastructure(config, processCompartments)        
 
         print("\n--[ Deleting Nosql tables ]--")
         DeleteNosql(config, processCompartments)
