@@ -155,14 +155,13 @@ def DeleteImages(config, Compartments):
             try:
                 itemstatus = object.get_image(image_id=item.id).data
                 if itemstatus.lifecycle_state != "DELETED":
-                        try:
-                            print("Deleting: {}".format(itemstatus.display_name))
-                            object.delete_image(image_id=itemstatus.id)
-                        except:
-                            print("error trying to delete: {}".format(itemstatus.display_name))
-                else:
-                    print("{} = {}".format(itemstatus.display_name, itemstatus.lifecycle_state))
-                    count = count + 1
+                    try:
+                        print("Deleting: {}".format(itemstatus.display_name))
+                        object.delete_image(image_id=itemstatus.id)
+                    except:
+                        print("{} = {}".format(itemstatus.display_name, itemstatus.lifecycle_state))
+                        print("error trying to delete: {}".format(itemstatus.display_name))
+                        count = count + 1
             except:
                 print("error deleting {}, probably already deleted".format(item.display_name))
         if count > 0:
