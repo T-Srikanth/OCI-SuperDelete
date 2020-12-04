@@ -186,6 +186,7 @@ if confirm == "yes":
         DeleteAnalyticsInstances(config, processCompartments)
         DeleteBigDataInstances(config, processCompartments)
         DeleteIntegrationInstances(config, processCompartments)
+        DeleteDataIntegrationInstances(config, processCompartments)
         
         print ("\n--[ Deleting VCNs ]--")
         DeleteVCN(config, processCompartments)        
