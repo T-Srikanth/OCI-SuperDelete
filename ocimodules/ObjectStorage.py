@@ -34,9 +34,12 @@ def DeleteBuckets(config, Compartments):
 
     for buckets in AllBuckets:
         for bucket in buckets:
-            print ("Delete bucket: {}".format(bucket.name))
-            object.delete_bucket(namespace_name=bucket.namespace,bucket_name=bucket.name)
-
+            try:
+                print ("Delete bucket: {}".format(bucket.name))
+                object.delete_bucket(namespace_name=bucket.namespace,bucket_name=bucket.name)
+            except Exception as e:
+                print(e)
+                continue
 
 def DeleteObjects(config, bucket):
     objectlimit = 20
@@ -76,9 +79,12 @@ def DeleteObjects(config, bucket):
         items = result.data.objects
 
         for item in items:
-            print ("Deleting {}:{}".format(bucket.name, item.name))
-            object.delete_object(namespace_name=bucket.namespace, bucket_name=bucket.name, object_name=item.name)
-
+            try:
+                print ("Deleting {}:{}".format(bucket.name, item.name))
+                object.delete_object(namespace_name=bucket.namespace, bucket_name=bucket.name, object_name=item.name)
+            except Exception as e:
+                print(e)
+                continue
         if len(items) == objectlimit:
             more = True
         else:
