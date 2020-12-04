@@ -26,6 +26,7 @@ from ocimodules.Deployment import *
 from ocimodules.Streaming import *
 from ocimodules.Analytics import *
 from ocimodules.Integration import *
+from ocimodules.BigData import *
 import logging
 
 ########## Configuration ####################
@@ -183,6 +184,7 @@ if confirm == "yes":
         
         print ("\n--[ Deleting Analytics and Integration Instances ]--")
         DeleteAnalyticsInstances(config, processCompartments)
+        DeleteBigDataInstances(config, processCompartments)
         DeleteIntegrationInstances(config, processCompartments)
         
         print ("\n--[ Deleting VCNs ]--")
