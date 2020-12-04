@@ -24,6 +24,8 @@ from ocimodules.DigitalAssistant import *
 from ocimodules.APIGateway import *
 from ocimodules.Deployment import *
 from ocimodules.Streaming import *
+from ocimodules.Analytics import *
+from ocimodules.Integration import *
 import logging
 
 ########## Configuration ####################
@@ -172,15 +174,19 @@ if confirm == "yes":
         print ("\n--[ Deleting Streams ]--")
         DeleteStreams(config, processCompartments)
         DeleteStreamPools(config, processCompartments)
-        
-        print ("\n--[ Deleting VCNs ]--")
-        DeleteVCN(config, processCompartments)
 
         print ("\n--[ Deleting Alarms ]--")
         DeleteAlarms(config, processCompartments)
 
         print ("\n--[ Deleting Notifications ]--")
         DeleteNotifications(config, processCompartments)
+        
+        print ("\n--[ Deleting Analytics and Integration Instances ]--")
+        DeleteAnalyticsInstances(config, processCompartments)
+        DeleteIntegrationInstances(config, processCompartments)
+        
+        print ("\n--[ Deleting VCNs ]--")
+        DeleteVCN(config, processCompartments)        
 
     print ("\n--[ Deleting Policies ]--")
     config["region"] = homeregion
@@ -189,6 +195,3 @@ if confirm == "yes":
     print ("\n--[ Hopefully deleting compartments, if empty ]--")
     config["region"] = homeregion
     DeleteCompartments(config,processCompartments, DeleteCompartmentOCID)
-
-
-
