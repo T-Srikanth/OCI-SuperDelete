@@ -7,7 +7,7 @@ def DeleteBigDataInstances(config, Compartments):
     AllItems = []
     object = oci.bds.BdsClient(config)
 
-    print ("Getting all Integration Instances")
+    print ("Getting all BigData Instances")
     for Compartment in Compartments:
         items = oci.pagination.list_call_get_all_results(object.list_bds_instances, compartment_id=Compartment.id).data
         for item in items:
